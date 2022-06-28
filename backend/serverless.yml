@@ -39,6 +39,19 @@ provider:
     cors:
       allowedOrigins:
         - https://adibta-fcc-voting-app.vercel.app
+    authorizers:
+      JwtAuthorizer:
+        type: jwt
+        identitySource: $request.header.Authorization
+        issuerUrl:
+          Fn::Join:
+            - ''
+            - - https://cognito-idp.
+              - ${aws:region}
+              - .amazonaws.com/
+              - Ref: CognitoUserPool
+        audience:
+          Ref: CognitoUserPoolClient
 
   environment:
     TABLE_NAME:
@@ -88,3 +101,26 @@ resources:
                 KeyType: 'RANGE'
             Projection:
               ProjectionType: ALL
+
+    CognitoUserPoolVotingAppUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        # Set email as an alias
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+        Schema:
+          - AttributeDataType: String
+            Mutable: true
+            Name: nickname
+            Required: true
+
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        UserPoolId:
+          Ref: CognitoUserPoolVotingAppUserPool
+        ExplicitAuthFlows:
+          - ADMIN_NO_SRP_AUTH
+        GenerateSecret: false
