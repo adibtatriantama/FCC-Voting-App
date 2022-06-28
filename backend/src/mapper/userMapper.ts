@@ -8,6 +8,7 @@ export class UserMapper {
       SK: generateUserSk(),
       id: user.id,
       nickname: user.nickname,
+      email: user.email,
     };
   }
   static toDto(user: User): UserDto {
@@ -20,6 +21,7 @@ export class UserMapper {
     return User.create(
       {
         nickname: dto.nickname,
+        email: dto.email,
       },
       dto.id,
     );

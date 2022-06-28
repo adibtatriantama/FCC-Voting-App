@@ -1,8 +1,9 @@
 export type UserProps = {
   nickname: string;
+  email: string;
 };
 
-export type UserDto = UserProps;
+export type UserDto = Omit<UserProps, 'email'>;
 
 export class User {
   private constructor(
@@ -16,5 +17,9 @@ export class User {
 
   get nickname(): string {
     return this.props.nickname;
+  }
+
+  get email(): string {
+    return this.props.email;
   }
 }

@@ -12,9 +12,13 @@ export const main: PostConfirmationTriggerHandler = async (
 ) => {
   if (event.triggerSource === 'PostConfirmation_ConfirmSignUp') {
     const username = event.userName;
-    const { nickname } = event.request.userAttributes;
+    const { nickname, email } = event.request.userAttributes;
 
-    const useCaseResponse = await useCase.execute({ id: username, nickname });
+    const useCaseResponse = await useCase.execute({
+      id: username,
+      nickname,
+      email,
+    });
 
     if (useCaseResponse.isLeft()) {
       console.error(useCaseResponse.value.message);

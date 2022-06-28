@@ -8,6 +8,7 @@ import { UserRepo } from 'src/repo/userRepo';
 
 export type CreateUserRequest = {
   id: string;
+  email: string;
   nickname: string;
 };
 
@@ -32,7 +33,10 @@ export class CreateUser
     } else if (findExistingUserResult.getErrorValue() !== NOT_FOUND) {
       return left(new UnexpectedError());
     }
-    const user = User.create({ nickname: request.nickname }, request.id);
+    const user = User.create(
+      { nickname: request.nickname, email: request.email },
+      request.id,
+    );
 
     const saveResult = await this.userRepo.save(user);
 

@@ -11,8 +11,12 @@ let mockUserRepo: UserRepo;
 const dummyRequest = {
   id: 'testerId',
   nickname: 'tester',
+  email: 'tester@mail.com',
 };
-const dummyUser = User.create({ nickname: 'tester' }, 'testerId');
+const dummyUser = User.create(
+  { nickname: 'tester', email: 'tester@mail.com' },
+  'testerId',
+);
 
 afterEach(() => {
   jest.clearAllMocks();

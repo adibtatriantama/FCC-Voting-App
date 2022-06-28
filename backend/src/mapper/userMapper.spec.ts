@@ -7,6 +7,7 @@ describe('UserMapper', () => {
       const user = User.create(
         {
           nickname: 'tester',
+          email: 'tester@mail.com',
         },
         'tester1',
       );
@@ -16,6 +17,7 @@ describe('UserMapper', () => {
         PK: 'u#tester1',
         SK: 'metadata',
         id: 'tester1',
+        email: 'tester@mail.com',
         nickname: 'tester',
       });
     });
@@ -26,6 +28,7 @@ describe('UserMapper', () => {
       const user = User.create(
         {
           nickname: 'tester',
+          email: 'tester@mail.com',
         },
         'tester1',
       );
@@ -45,6 +48,7 @@ describe('UserMapper', () => {
         SK: 'metadata',
         id: 'tester1',
         nickname: 'tester',
+        email: 'tester@mail.com',
       };
 
       const result = UserMapper.toEntity(dto);
@@ -53,6 +57,7 @@ describe('UserMapper', () => {
         User.create(
           {
             nickname: 'tester',
+            email: 'tester@mail.com',
           },
           'tester1',
         ),
