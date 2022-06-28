@@ -1,5 +1,5 @@
 import { generateUserPk, generateUserSk } from 'src/helper';
-import { User } from 'src/model/user';
+import { User, UserDto } from 'src/model/user';
 
 export class UserMapper {
   static toDynamoDbModel(user: User): Record<string, any> {
@@ -10,7 +10,7 @@ export class UserMapper {
       nickname: user.nickname,
     };
   }
-  static toDto(user: User): Record<string, any> {
+  static toDto(user: User): UserDto {
     return {
       nickname: user.nickname,
     };
