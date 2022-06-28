@@ -57,6 +57,14 @@ provider:
     TABLE_NAME:
       Ref: MainTable
 
+functions:
+  createUser:
+    handler: src/useCase/createUser/handler.main
+    events:
+      - cognitoUserPool:
+          pool: VotingAppUserPool
+          trigger: PostConfirmation
+
 resources:
   - ${file(resources/dynamodb-table.yml)}
   - ${file(resources/cognito-user-pool.yml)}
