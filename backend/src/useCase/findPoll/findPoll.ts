@@ -8,7 +8,7 @@ import { PollRepo } from 'src/repo/pollRepo';
 
 const FIND_POLL_PATH = 'poll';
 
-export type FindPollRequest = { [queryOption: string]: any };
+export type FindPollRequest = { queryOptions: Record<string, any> };
 
 export type FindPollResponse = Either<
   UseCaseError,
@@ -19,7 +19,7 @@ export class FindPoll implements UseCase<FindPollRequest, FindPollResponse> {
   constructor(private readonly pollRepo: PollRepo) {}
 
   async execute(request: FindPollRequest): Promise<FindPollResponse> {
-    const findResult = await this.pollRepo.find(request);
+    const findResult = await this.pollRepo.find(request.queryOptions);
 
     if (findResult.isFailure) {
       return left(new UnexpectedError());

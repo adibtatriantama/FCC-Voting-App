@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler } from 'aws-lambda';
 import { UnexpectedError } from 'src/core/useCaseError';
 import { DynamoDbPollRepo } from 'src/repo/impl/dynamoDbPollRepo';
-import { FindPoll, FindPollRequest } from './findPoll';
+import { FindPoll } from './findPoll';
 
 const useCase = new FindPoll(new DynamoDbPollRepo());
 
@@ -10,15 +10,15 @@ export const main: APIGatewayProxyHandler = async (
 ) => {
   process.env.BASE_URL = `https://${event.requestContext.domainName}`;
 
+  // DynamoDB specific pagination
   const { lastEvaluatedKey } = event.queryStringParameters || {};
-
-  const request: FindPollRequest = {
+  const queryOptions = {
     lastEvaluatedKey: lastEvaluatedKey
       ? JSON.parse(lastEvaluatedKey)
       : undefined,
   };
 
-  const response = await useCase.execute(request);
+  const response = await useCase.execute({ queryOptions });
 
   if (response.isRight()) {
     return {

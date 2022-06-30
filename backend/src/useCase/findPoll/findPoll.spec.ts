@@ -39,7 +39,7 @@ describe('FindPoll', () => {
   });
 
   it('should return dto', async () => {
-    const request = {};
+    const request = { queryOptions: {} };
 
     const response = await useCase.execute(request);
 
@@ -66,7 +66,7 @@ describe('FindPoll', () => {
     });
 
     it('should return the pagination link', async () => {
-      const request = {};
+      const request = { queryOptions: {} };
 
       const response = await useCase.execute(request);
 
@@ -85,7 +85,7 @@ describe('FindPoll', () => {
     });
 
     it('should return UnexpectedError', async () => {
-      const request = {};
+      const request = { queryOptions: {} };
 
       const response = await useCase.execute(request);
 
