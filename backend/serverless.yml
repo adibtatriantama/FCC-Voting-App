@@ -65,6 +65,15 @@ functions:
           pool: VotingAppUserPool
           trigger: PostConfirmation
 
+  createPoll:
+    handler: src/useCase/createPoll/handler.main
+    events:
+      - httpApi:
+          path: /poll
+          method: post
+          authorizer:
+            name: JwtAuthorizer
+
 resources:
   - ${file(resources/dynamodb-table.yml)}
   - ${file(resources/cognito-user-pool.yml)}
