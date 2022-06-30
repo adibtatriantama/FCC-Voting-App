@@ -9,6 +9,8 @@ import { Result } from 'src/core/result';
 import { generatePollGsi1Pk, generatePollPk, generatePollSk } from 'src/helper';
 import { PollMapper } from 'src/mapper/pollMapper';
 import { VoteMapper } from 'src/mapper/voteMapper';
+import { Items } from 'src/model/items';
+import { PaginationQueryParams } from 'src/model/pagination';
 import { Poll, PollVote } from 'src/model/poll';
 import { QueryOptions, PollRepo, FindByIdOptions } from '../pollRepo';
 
@@ -52,7 +54,7 @@ export class DynamoDbPollRepo implements PollRepo {
     return Result.ok(poll);
   }
 
-  async find(option?: QueryOptions): Promise<Result<Poll[]>> {
+  async find(option?: QueryOptions): Promise<Result<Items<Poll>>> {
     let queryResult: QueryCommandOutput;
 
     try {
@@ -65,9 +67,7 @@ export class DynamoDbPollRepo implements PollRepo {
         IndexName: 'GSI2',
         ScanIndexForward: false,
         Limit: LIMIT,
-        ExclusiveStartKey: option?.lastEvaluatedKey
-          ? { GSI2PK: POLL, GSI2SK: option?.lastEvaluatedKey }
-          : undefined,
+        ExclusiveStartKey: option?.lastEvaluatedKey,
       });
     } catch (error) {
       console.error(error);
@@ -76,17 +76,25 @@ export class DynamoDbPollRepo implements PollRepo {
 
     const items = queryResult.Items;
 
+    const paginationQueryParams: PaginationQueryParams = {
+      next: queryResult?.LastEvaluatedKey
+        ? `lastEvaluatedKey=${encodeURIComponent(
+            JSON.stringify(queryResult.LastEvaluatedKey),
+          )}`
+        : undefined,
+    };
+
     const polls: Poll[] = items.map((item): Poll => {
       return PollMapper.toEntity(item);
     });
 
-    return Result.ok(polls);
+    return Result.ok({ paginationQueryParams, items: polls });
   }
 
   async findByUserId(
     userId: string,
     option?: QueryOptions,
-  ): Promise<Result<Poll[]>> {
+  ): Promise<Result<Items<Poll>>> {
     let queryResult: QueryCommandOutput;
 
     try {
@@ -99,12 +107,7 @@ export class DynamoDbPollRepo implements PollRepo {
         ScanIndexForward: false,
         IndexName: 'GSI1',
         Limit: LIMIT,
-        ExclusiveStartKey: option?.lastEvaluatedKey
-          ? {
-              GSI1PK: generatePollGsi1Pk(userId),
-              GSI1SK: option?.lastEvaluatedKey,
-            }
-          : undefined,
+        ExclusiveStartKey: option?.lastEvaluatedKey,
       });
     } catch (error) {
       console.error(error);
@@ -113,11 +116,19 @@ export class DynamoDbPollRepo implements PollRepo {
 
     const items = queryResult.Items;
 
+    const paginationQueryParams: PaginationQueryParams = {
+      next: queryResult?.LastEvaluatedKey
+        ? `lastEvaluatedKey=${encodeURIComponent(
+            JSON.stringify(queryResult.LastEvaluatedKey),
+          )}`
+        : undefined,
+    };
+
     const polls: Poll[] = items.map((item): Poll => {
       return PollMapper.toEntity(item);
     });
 
-    return Result.ok(polls);
+    return Result.ok({ paginationQueryParams, items: polls });
   }
 
   async save(poll: Poll): Promise<Result<void>> {
