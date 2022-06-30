@@ -5,9 +5,8 @@ import {
   generatePollGsi2Sk,
   generatePollPk,
   generatePollSk,
-  removeProperty,
 } from 'src/helper';
-import { Poll } from 'src/model/poll';
+import { Poll, PollDto } from 'src/model/poll';
 
 export class PollMapper {
   static toDynamoDbModel(poll: Poll): Record<string, any> {
@@ -22,11 +21,17 @@ export class PollMapper {
     };
   }
 
-  static toDto(poll: Poll): Record<string, any> {
+  static toDto(poll: Poll): PollDto {
     return {
-      date: poll.date.toISOString(),
       id: poll.id,
-      ...removeProperty(poll.props, 'date'),
+      authorId: poll.authorId,
+      author: poll.author,
+      name: poll.name,
+      options: poll.options,
+      voteCount: poll.voteCount,
+      voteCountPerOption: poll.voteCountPerOption,
+      enableOtherOption: poll.enableOtherOption,
+      date: poll.date.toISOString(),
     };
   }
 
