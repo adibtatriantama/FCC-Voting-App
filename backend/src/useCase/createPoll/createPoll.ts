@@ -23,8 +23,6 @@ export class CreatePoll
   async execute(request: CreatePollRequest): Promise<CreatePollResponse> {
     const pollCreationResult = Poll.create(request);
 
-    console.log(pollCreationResult);
-
     if (pollCreationResult.isFailure) {
       return left(new PollCreationError(pollCreationResult.getErrorValue()));
     }
