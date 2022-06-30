@@ -15,3 +15,9 @@ export class UnexpectedError extends UseCaseError {
     super(`Unexpected error`);
   }
 }
+
+export class EntityNotFoundError extends UseCaseError {
+  constructor() {
+    super('Entity is not found');
+  }
+}

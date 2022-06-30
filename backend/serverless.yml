@@ -73,6 +73,12 @@ functions:
           method: post
           authorizer:
             name: JwtAuthorizer
+  findOnePollById:
+    handler: src/useCase/findOnePollById/handler.main
+    events:
+      - httpApi:
+          path: /poll/{pollId}
+          method: get
 
 resources:
   - ${file(resources/dynamodb-table.yml)}
