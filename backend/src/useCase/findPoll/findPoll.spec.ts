@@ -54,7 +54,9 @@ describe('FindPoll', () => {
           Result.ok({
             items: [dummyEntity],
             paginationQueryParams: {
-              next: encodeURIComponent(JSON.stringify({ key: 'item' })),
+              next: `lastEvaluatedKey=${encodeURIComponent(
+                JSON.stringify({ key: 'item' }),
+              )}`,
             },
           }),
         ),
