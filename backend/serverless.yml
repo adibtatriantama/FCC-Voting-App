@@ -79,6 +79,12 @@ functions:
       - httpApi:
           path: /poll/{pollId}
           method: get
+  findPoll:
+    handler: src/useCase/findPoll/handler.main
+    events:
+      - httpApi:
+          path: /poll
+          method: get
 
 resources:
   - ${file(resources/dynamodb-table.yml)}
