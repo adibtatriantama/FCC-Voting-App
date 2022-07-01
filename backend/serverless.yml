@@ -6,6 +6,10 @@ useDotenv: true
 custom:
   MainTableArn:
     Fn::GetAtt: [MainTable, Arn]
+  UserPoolId:
+    Ref: CognitoUserPoolVotingAppUserPool
+  UserPoolClientId:
+    Ref: CognitoUserPoolClient
 
 plugins:
   - serverless-esbuild
@@ -85,6 +89,15 @@ functions:
       - httpApi:
           path: /poll
           method: get
+  addVote:
+    handler: src/useCase/addVote/handler.main
+    events:
+      - httpApi:
+          path: /poll/{pollId}/vote
+          method: post
+    environment:
+      COGNITO_POOL_ID: '${self:custom.UserPoolId}'
+      COGNITO_POOL_CLIENT_ID: '${self:custom.UserPoolClientId}'
 
 resources:
   - ${file(resources/dynamodb-table.yml)}

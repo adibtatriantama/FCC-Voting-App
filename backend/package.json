@@ -13,6 +13,8 @@
   "devDependencies": {
     "@types/aws-lambda": "8.10.100",
     "@types/jest": "28.1.1",
+    "@types/jsonwebtoken": "8.5.8",
+    "@types/jwk-to-pem": "2.0.1",
     "@types/node": "18.0.0",
     "@types/serverless": "3.12.7",
     "@typescript-eslint/eslint-plugin": "5.28.0",
@@ -37,6 +39,7 @@
     "@aws-sdk/lib-dynamodb": "3.110.0",
     "aws-sdk": "2.1155.0",
     "axios": "0.27.2",
+    "jwk-to-pem": "2.0.5",
     "ulid": "2.3.0"
   }
 }
