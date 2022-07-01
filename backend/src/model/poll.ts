@@ -100,20 +100,30 @@ export class Poll {
 
     const isOptionExist = this.options.includes(option);
 
-    if (!isOptionExist) {
-      this._unsavedVote = {
-        isOptionNew: true,
-        date: new Date(),
-        option,
-      };
-    } else {
-      this._unsavedVote = {
-        isOptionNew: false,
-        date: new Date(),
-        option,
-      };
-    }
+    this._unsavedVote = {
+      isOptionNew: !isOptionExist,
+      date: new Date(),
+      option,
+    };
+
+    this.calculateVoteCount();
 
     return Result.ok();
+  }
+
+  private calculateVoteCount() {
+    if (this._unsavedVote.isOptionNew) {
+      this.props.voteCountPerOption[this._unsavedVote.option] = 1;
+    } else {
+      this.props.voteCountPerOption[this._unsavedVote.option]++;
+    }
+
+    let voteCount = 0;
+
+    for (const key in this.props.voteCountPerOption) {
+      voteCount += this.props.voteCountPerOption[key];
+    }
+
+    this.props.voteCount = voteCount;
   }
 }

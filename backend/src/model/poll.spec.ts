@@ -65,6 +65,11 @@ describe('Poll', () => {
         authorId: 'testerId',
         name: 'poll',
         options: ['a', 'b'],
+        voteCount: 100,
+        voteCountPerOption: {
+          a: 71,
+          b: 29,
+        },
         date: new Date(),
       }).getValue();
     });
@@ -75,6 +80,13 @@ describe('Poll', () => {
       expect(poll.unsavedVote).toBeDefined();
     });
 
+    it('should update vote count', () => {
+      poll.addVote('a');
+
+      expect(poll.voteCount).toBe(101);
+      expect(poll.voteCountPerOption['a']).toBe(72);
+    });
+
     describe("when option isn't exist", () => {
       beforeEach(() => {
         poll = Poll.create({
@@ -82,6 +94,11 @@ describe('Poll', () => {
           authorId: 'testerId',
           name: 'poll',
           options: ['a', 'b'],
+          voteCount: 100,
+          voteCountPerOption: {
+            a: 71,
+            b: 29,
+          },
           date: new Date(),
         }).getValue();
       });
@@ -96,6 +113,13 @@ describe('Poll', () => {
         poll.addVote('c');
 
         expect(poll.unsavedVote.isOptionNew).toBe(true);
+      });
+
+      it('should update vote count', () => {
+        poll.addVote('c');
+
+        expect(poll.voteCount).toBe(101);
+        expect(poll.voteCountPerOption['c']).toBe(1);
       });
     });
 
