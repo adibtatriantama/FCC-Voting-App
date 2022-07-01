@@ -89,6 +89,14 @@ functions:
       - httpApi:
           path: /poll
           method: get
+  findMyPoll:
+    handler: src/useCase/findMyPoll/handler.main
+    events:
+      - httpApi:
+          path: /me/poll
+          method: get
+          authorizer:
+            name: JwtAuthorizer
   addVote:
     handler: src/useCase/addVote/handler.main
     events:
