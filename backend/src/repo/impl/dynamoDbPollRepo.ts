@@ -10,7 +10,7 @@ import { generatePollGsi1Pk, generatePollPk, generatePollSk } from 'src/helper';
 import { PollMapper } from 'src/mapper/pollMapper';
 import { Items } from 'src/model/items';
 import { PaginationQueryParams } from 'src/model/pagination';
-import { Poll, PollVote } from 'src/model/poll';
+import { Poll } from 'src/model/poll';
 import { QueryOptions, PollRepo, FindByIdOptions } from '../pollRepo';
 
 const ddbclient = new DynamoDBClient({
