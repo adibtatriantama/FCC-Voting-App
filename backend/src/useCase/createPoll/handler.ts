@@ -11,9 +11,9 @@ export const main: APIGatewayProxyHandler = async (
   const { sub: authorId, nickname: author } =
     event.requestContext.authorizer?.jwt.claims;
 
-  const { name, options, enableOtherOption } = JSON.parse(event.body);
+  const { name, options } = JSON.parse(event.body);
 
-  if (!name || !options || !enableOtherOption) {
+  if (!name || !options) {
     return {
       statusCode: 400,
       body: JSON.stringify({
@@ -28,7 +28,6 @@ export const main: APIGatewayProxyHandler = async (
     authorId,
     name,
     options,
-    enableOtherOption,
   };
 
   const response = await useCase.execute(request);
