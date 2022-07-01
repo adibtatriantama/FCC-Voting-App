@@ -8,7 +8,6 @@ import { NOT_FOUND, POLL } from 'src/constant';
 import { Result } from 'src/core/result';
 import { generatePollGsi1Pk, generatePollPk, generatePollSk } from 'src/helper';
 import { PollMapper } from 'src/mapper/pollMapper';
-import { VoteMapper } from 'src/mapper/voteMapper';
 import { Items } from 'src/model/items';
 import { PaginationQueryParams } from 'src/model/pagination';
 import { Poll, PollVote } from 'src/model/poll';
@@ -137,7 +136,6 @@ export class DynamoDbPollRepo implements PollRepo {
     if (poll.unsavedVote) {
       const unsavedVote = poll.unsavedVote;
       // only update vote
-      promises.push(this.createVote(unsavedVote));
       promises.push(
         this.updatePollVoteCount(
           poll.id,
@@ -158,13 +156,6 @@ export class DynamoDbPollRepo implements PollRepo {
     }
 
     return Result.ok();
-  }
-
-  private async createVote(vote: PollVote): Promise<void> {
-    await ddbDoc.put({
-      TableName: process.env.TABLE_NAME,
-      Item: VoteMapper.toDynamoDbModel(vote),
-    });
   }
 
   private async updatePollVoteCount(

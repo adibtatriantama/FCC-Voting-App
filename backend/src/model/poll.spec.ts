@@ -73,14 +73,14 @@ describe('Poll', () => {
     });
 
     it('should addVote', () => {
-      poll.addVote('voterId', 'a');
+      poll.addVote('a');
 
       expect(poll.unsavedVote).toBeDefined();
     });
 
     describe("when option isn't exist", () => {
       it('should return failure', () => {
-        const result = poll.addVote('voterId', 'c');
+        const result = poll.addVote('c');
 
         expect(result.isFailure).toBe(true);
       });
@@ -99,13 +99,13 @@ describe('Poll', () => {
       });
 
       it('should add vote', () => {
-        poll.addVote('voterId', 'c');
+        poll.addVote('c');
 
         expect(poll.unsavedVote).toBeDefined();
       });
 
       it('should flag that the option is new', () => {
-        poll.addVote('voterId', 'c');
+        poll.addVote('c');
 
         expect(poll.unsavedVote.isOptionNew).toBe(true);
       });
@@ -113,7 +113,7 @@ describe('Poll', () => {
 
     describe('when vote existing option', () => {
       it('should not flag that the option is new', () => {
-        poll.addVote('voterId', 'b');
+        poll.addVote('b');
 
         expect(poll.unsavedVote.isOptionNew).toBe(false);
       });
@@ -121,9 +121,9 @@ describe('Poll', () => {
 
     describe('when unsaved vote already exist', () => {
       it('should return failure', () => {
-        poll.addVote('voterId', 'b');
+        poll.addVote('b');
 
-        const result = poll.addVote('voterId', 'b');
+        const result = poll.addVote('b');
 
         expect(result.isFailure).toBe(true);
       });

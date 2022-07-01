@@ -2,8 +2,6 @@ import { Result } from 'src/core/result';
 import { ulid } from 'ulid';
 
 export type PollVote = {
-  pollId: string;
-  userId: string;
   option: string;
   isOptionNew: boolean;
   date: Date;
@@ -100,7 +98,7 @@ export class Poll {
     return this._unsavedVote;
   }
 
-  addVote(userId: string, option: string): Result<void> {
+  addVote(option: string): Result<void> {
     if (this._unsavedVote) {
       return Result.fail('Only able to save one vote at a time');
     }
@@ -111,18 +109,14 @@ export class Poll {
       return Result.fail("Option doesn't exist");
     } else if (!isOptionExist && this.enableOtherOption === true) {
       this._unsavedVote = {
-        pollId: this.id,
         isOptionNew: true,
         date: new Date(),
-        userId,
         option,
       };
     } else {
       this._unsavedVote = {
-        pollId: this.id,
         isOptionNew: false,
         date: new Date(),
-        userId,
         option,
       };
     }
