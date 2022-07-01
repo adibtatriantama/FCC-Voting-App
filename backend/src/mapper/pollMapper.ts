@@ -30,7 +30,6 @@ export class PollMapper {
       options: poll.options,
       voteCount: poll.voteCount,
       voteCountPerOption: poll.voteCountPerOption,
-      enableOtherOption: poll.enableOtherOption,
       date: poll.date.toISOString(),
     };
   }
@@ -41,7 +40,6 @@ export class PollMapper {
         voteCount: dto.voteCount,
         options: dto.options,
         name: dto.name,
-        enableOtherOption: dto.enableOtherOption,
         date: new Date(dto.date),
         author: dto.author,
         authorId: dto.authorId,

@@ -14,7 +14,6 @@ const buildCreatePollRequest = (
     authorId: request?.authorId ?? 'testerId',
     name: request?.name ?? 'poll',
     options: request?.options ?? ['a', 'b'],
-    enableOtherOption: request?.enableOtherOption ?? true,
     date: request?.date ?? new Date(),
   };
 };
@@ -59,7 +58,6 @@ describe('CreatePoll', () => {
       // will invalid because only have 1 option
       const request = buildCreatePollRequest({
         options: ['a'],
-        enableOtherOption: false,
       });
 
       const response = await useCase.execute(request);

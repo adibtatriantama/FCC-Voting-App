@@ -14,7 +14,6 @@ export type PollProps = {
   options: string[];
   voteCountPerOption?: Record<string, number>;
   voteCount?: number;
-  enableOtherOption: boolean;
   date: Date;
 };
 
@@ -43,9 +42,9 @@ export class Poll {
       return Result.fail("Poll name shouln't be empty");
     }
 
-    if (props.options.length < 2 && !props.enableOtherOption) {
+    if (props.options.length < 2) {
       return Result.fail(
-        'Poll should have minimum 2 options. Add more options or enable user to add other options',
+        'Poll should have minimum 2 options. Add more options!',
       );
     }
 
@@ -86,10 +85,6 @@ export class Poll {
     return this.props.voteCountPerOption;
   }
 
-  get enableOtherOption(): boolean {
-    return this.props.enableOtherOption;
-  }
-
   get date(): Date {
     return this.props.date;
   }
@@ -105,9 +100,7 @@ export class Poll {
 
     const isOptionExist = this.options.includes(option);
 
-    if (!isOptionExist && this.enableOtherOption === false) {
-      return Result.fail("Option doesn't exist");
-    } else if (!isOptionExist && this.enableOtherOption === true) {
+    if (!isOptionExist) {
       this._unsavedVote = {
         isOptionNew: true,
         date: new Date(),

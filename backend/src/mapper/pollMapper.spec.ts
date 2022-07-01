@@ -15,7 +15,6 @@ describe('PollMapper', () => {
         voteCount: 0,
         options: ['a', 'b'],
         name: 'poll name',
-        enableOtherOption: true,
         date: '2022-08-11T17:00:00.000Z',
         author: 'tester',
         authorId: 'testerId',
@@ -26,7 +25,6 @@ describe('PollMapper', () => {
         {
           options: ['a', 'b'],
           name: 'poll name',
-          enableOtherOption: true,
           date: new Date(2022, 7, 12),
           author: 'tester',
           authorId: 'testerId',
@@ -47,7 +45,6 @@ describe('PollMapper', () => {
         voteCount: 0,
         options: ['a', 'b'],
         name: 'poll name',
-        enableOtherOption: true,
         date: '2022-08-11T17:00:00.000Z',
         author: 'tester',
         authorId: 'testerId',
@@ -58,7 +55,6 @@ describe('PollMapper', () => {
         {
           options: ['a', 'b'],
           name: 'poll name',
-          enableOtherOption: true,
           date: new Date(2022, 7, 12),
           author: 'tester',
           authorId: 'testerId',
@@ -77,7 +73,6 @@ describe('PollMapper', () => {
         {
           options: ['a', 'b'],
           name: 'poll name',
-          enableOtherOption: true,
           date: new Date(2022, 7, 12),
           voteCountPerOption: {
             a: 33,
@@ -101,7 +96,6 @@ describe('PollMapper', () => {
         voteCount: 144,
         options: ['a', 'b'],
         name: 'poll name',
-        enableOtherOption: true,
         date: '2022-08-11T17:00:00.000Z',
         author: 'tester',
         authorId: 'testerId',

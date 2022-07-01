@@ -26,12 +26,11 @@ describe('Poll', () => {
       });
     });
 
-    describe('when poll option count is less than 2 and enableOtherOption is false', () => {
+    describe('when poll option count is less than 2', () => {
       it('should return failure', () => {
         const createPollResult = Poll.create({
           ...defaultProps,
           options: ['a'],
-          enableOtherOption: false,
         });
 
         expect(createPollResult.isFailure).toBe(true);
@@ -45,7 +44,6 @@ describe('Poll', () => {
           authorId: 'testerId',
           name: 'poll',
           options: ['a', 'b'],
-          enableOtherOption: false,
           date: new Date(),
         });
 
@@ -67,7 +65,6 @@ describe('Poll', () => {
         authorId: 'testerId',
         name: 'poll',
         options: ['a', 'b'],
-        enableOtherOption: false,
         date: new Date(),
       }).getValue();
     });
@@ -79,21 +76,12 @@ describe('Poll', () => {
     });
 
     describe("when option isn't exist", () => {
-      it('should return failure', () => {
-        const result = poll.addVote('c');
-
-        expect(result.isFailure).toBe(true);
-      });
-    });
-
-    describe("when option isn't exist and enable other option equal true", () => {
       beforeEach(() => {
         poll = Poll.create({
           author: 'tester',
           authorId: 'testerId',
           name: 'poll',
           options: ['a', 'b'],
-          enableOtherOption: true,
           date: new Date(),
         }).getValue();
       });

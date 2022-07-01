@@ -10,7 +10,6 @@ const dummyEntity = Poll.create({
   authorId: 'testerId',
   name: 'poll',
   options: ['a', 'b'],
-  enableOtherOption: false,
   date: new Date(),
 }).getValue();
 
