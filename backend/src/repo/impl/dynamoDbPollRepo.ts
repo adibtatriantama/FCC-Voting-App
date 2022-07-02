@@ -166,9 +166,9 @@ export class DynamoDbPollRepo implements PollRepo {
     let updateExpression: string;
 
     if (isOptionNew) {
-      updateExpression = `SET voteCountPerOption.${option} = if_not_exists (voteCountPerOption.${option}, :one), voteCount = voteCount + :one`;
+      updateExpression = `SET voteCountPerOption.#option = if_not_exists (voteCountPerOption.#option, :one), voteCount = voteCount + :one`;
     } else {
-      updateExpression = `SET voteCountPerOption.${option} = voteCountPerOption.${option} + :one, voteCount = voteCount + :one`;
+      updateExpression = `SET voteCountPerOption.#option = voteCountPerOption.#option + :one, voteCount = voteCount + :one`;
     }
 
     await ddbDoc.update({
@@ -180,6 +180,9 @@ export class DynamoDbPollRepo implements PollRepo {
       UpdateExpression: updateExpression,
       ExpressionAttributeValues: {
         ':one': 1,
+      },
+      ExpressionAttributeNames: {
+        '#option': option,
       },
     });
   }
