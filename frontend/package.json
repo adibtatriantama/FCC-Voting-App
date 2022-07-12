@@ -1,6 +1,7 @@
 {
-	"name": "frontend",
+	"name": "voting-app-frontend",
 	"version": "0.0.1",
+	"author": "Adibta Triantama <adibtatriantama@gmail.com>",
 	"license": "MIT",
 	"scripts": {
 		"dev": "svelte-kit dev",
