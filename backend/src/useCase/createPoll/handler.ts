@@ -17,7 +17,7 @@ export const main: APIGatewayProxyHandler = async (
     return {
       statusCode: 400,
       body: JSON.stringify({
-        error: 'Validation error: name, options, enableOtherOption is required',
+        error: 'Validation error: name, options is required',
       }),
     };
   }
