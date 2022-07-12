@@ -165,10 +165,19 @@ export class DynamoDbPollRepo implements PollRepo {
   ): Promise<void> {
     let updateExpression: string;
 
+    const expressionAttributeValues = {
+      ':one': 1,
+    };
+    const expressionAttributeNames = {
+      '#opt': option,
+    };
+
     if (isOptionNew) {
-      updateExpression = `SET voteCountPerOption.#option = if_not_exists (voteCountPerOption.#option, :one), voteCount = voteCount + :one`;
+      updateExpression = `SET voteCountPerOption.#opt = if_not_exists (voteCountPerOption.#opt, :one), voteCount = voteCount + :one, #opts = list_append(#opts, :newOpts)`;
+      expressionAttributeNames['#opts'] = 'options';
+      expressionAttributeValues[':newOpts'] = [option];
     } else {
-      updateExpression = `SET voteCountPerOption.#option = voteCountPerOption.#option + :one, voteCount = voteCount + :one`;
+      updateExpression = `SET voteCountPerOption.#opt = voteCountPerOption.#opt + :one, voteCount = voteCount + :one`;
     }
 
     await ddbDoc.update({
@@ -178,12 +187,8 @@ export class DynamoDbPollRepo implements PollRepo {
         SK: generatePollSk(),
       },
       UpdateExpression: updateExpression,
-      ExpressionAttributeValues: {
-        ':one': 1,
-      },
-      ExpressionAttributeNames: {
-        '#option': option,
-      },
+      ExpressionAttributeValues: expressionAttributeValues,
+      ExpressionAttributeNames: expressionAttributeNames,
     });
   }
 

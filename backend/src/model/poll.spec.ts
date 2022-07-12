@@ -115,6 +115,12 @@ describe('Poll', () => {
         expect(poll.unsavedVote.isOptionNew).toBe(true);
       });
 
+      it('should add new option to the list', () => {
+        poll.addVote('c');
+
+        expect(poll.options.includes('c')).toBe(true);
+      });
+
       it('should update vote count', () => {
         poll.addVote('c');
 

@@ -100,6 +100,10 @@ export class Poll {
 
     const isOptionExist = this.options.includes(option);
 
+    if (!isOptionExist) {
+      this.props.options.push(option);
+    }
+
     this._unsavedVote = {
       isOptionNew: !isOptionExist,
       date: new Date(),
