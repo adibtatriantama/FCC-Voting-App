@@ -1,20 +1,34 @@
 import { Result } from 'src/core/result';
 import { UnexpectedError } from 'src/core/useCaseError';
+import { User } from 'src/model/user';
 import { PollRepo } from 'src/repo/pollRepo';
+import { UserRepo } from 'src/repo/userRepo';
 import { CreatePoll, CreatePollRequest, PollCreationError } from './createPoll';
 
 let useCase: CreatePoll;
 let mockPollRepo: PollRepo;
+let mockUserRepo: UserRepo;
+
+const dummyUser = User.create(
+  { nickname: 'tester', email: 'tester@mail.com' },
+  'testerId',
+);
 
 const buildCreatePollRequest = (
   request?: Partial<CreatePollRequest>,
 ): CreatePollRequest => {
   return {
-    author: request?.author ?? 'tester',
     authorId: request?.authorId ?? 'testerId',
     name: request?.name ?? 'poll',
     options: request?.options ?? ['a', 'b'],
     date: request?.date ?? new Date(),
+  };
+};
+
+const buildMockUserRepo = (params?: Partial<UserRepo>) => {
+  return {
+    findOneById: params?.findOneById ?? jest.fn(),
+    save: params?.save ?? jest.fn(),
   };
 };
 
@@ -32,8 +46,11 @@ describe('CreatePoll', () => {
     mockPollRepo = buildMockPollRepo({
       save: jest.fn().mockResolvedValue(Result.ok('any')),
     });
+    mockUserRepo = buildMockUserRepo({
+      findOneById: jest.fn().mockResolvedValue(Result.ok(dummyUser)),
+    });
 
-    useCase = new CreatePoll(mockPollRepo);
+    useCase = new CreatePoll(mockPollRepo, mockUserRepo);
   });
 
   it('should return dto', async () => {
@@ -73,7 +90,34 @@ describe('CreatePoll', () => {
         save: jest.fn().mockResolvedValue(Result.fail('error')),
       });
 
-      useCase = new CreatePoll(mockPollRepo);
+      mockUserRepo = buildMockUserRepo({
+        findOneById: jest.fn().mockResolvedValue(Result.ok(dummyUser)),
+      });
+
+      useCase = new CreatePoll(mockPollRepo, mockUserRepo);
+    });
+
+    it('should return unexpected error', async () => {
+      const request = buildCreatePollRequest();
+
+      const response = await useCase.execute(request);
+
+      expect(response.isLeft()).toBe(true);
+      expect(response.value).toBeInstanceOf(UnexpectedError);
+    });
+  });
+
+  describe('when unable to get user', () => {
+    beforeEach(() => {
+      mockPollRepo = buildMockPollRepo({
+        save: jest.fn().mockResolvedValue(Result.ok('any')),
+      });
+
+      mockUserRepo = buildMockUserRepo({
+        findOneById: jest.fn().mockResolvedValue(Result.fail('any')),
+      });
+
+      useCase = new CreatePoll(mockPollRepo, mockUserRepo);
     });
 
     it('should return unexpected error', async () => {

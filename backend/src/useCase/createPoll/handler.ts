@@ -1,15 +1,15 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler } from 'aws-lambda';
 import { UnexpectedError } from 'src/core/useCaseError';
 import { DynamoDbPollRepo } from 'src/repo/impl/dynamoDbPollRepo';
+import { DynamoDbUserRepo } from 'src/repo/impl/dynamoDbUserRepo';
 import { CreatePoll, CreatePollRequest, PollCreationError } from './createPoll';
 
-const useCase = new CreatePoll(new DynamoDbPollRepo());
+const useCase = new CreatePoll(new DynamoDbPollRepo(), new DynamoDbUserRepo());
 
 export const main: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
 ) => {
-  const { sub: authorId, nickname: author } =
-    event.requestContext.authorizer?.jwt.claims;
+  const { sub: authorId } = event.requestContext.authorizer?.jwt.claims;
 
   const { name, options } = JSON.parse(event.body);
 
@@ -24,7 +24,6 @@ export const main: APIGatewayProxyHandler = async (
 
   const request: CreatePollRequest = {
     date: new Date(),
-    author,
     authorId,
     name,
     options,
