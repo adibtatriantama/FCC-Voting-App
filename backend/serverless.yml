@@ -62,6 +62,14 @@ provider:
       Ref: MainTable
 
 functions:
+  findOwnUser:
+    handler: src/useCase/findUserById/handler.main
+    events:
+      - httpApi:
+          path: /me
+          method: get
+          authorizer:
+            name: JwtAuthorizer
   createUser:
     handler: src/useCase/createUser/handler.main
     events:
