@@ -1,6 +1,9 @@
 import { Poll } from 'src/model/poll';
 import { PollMapper } from './pollMapper';
 
+const dummyDate = new Date();
+const dummyDateIsoString = dummyDate.toISOString();
+
 describe('PollMapper', () => {
   describe('toDynamoDbModel', () => {
     it('should map correctly', () => {
@@ -10,12 +13,12 @@ describe('PollMapper', () => {
         GSI1PK: 'u#testerId',
         GSI1SK: `p#poll1`,
         GSI2PK: 'poll',
-        GSI2SK: `2022-08-11T17:00:00.000Z`,
+        GSI2SK: dummyDateIsoString,
         id: 'poll1',
         voteCount: 0,
         options: ['a', 'b'],
         name: 'poll name',
-        date: '2022-08-11T17:00:00.000Z',
+        date: dummyDateIsoString,
         author: 'tester',
         authorId: 'testerId',
         voteCountPerOption: { a: 0, b: 0 },
@@ -25,7 +28,7 @@ describe('PollMapper', () => {
         {
           options: ['a', 'b'],
           name: 'poll name',
-          date: new Date(2022, 7, 12),
+          date: dummyDate,
           author: 'tester',
           authorId: 'testerId',
         },
@@ -45,7 +48,7 @@ describe('PollMapper', () => {
         voteCount: 0,
         options: ['a', 'b'],
         name: 'poll name',
-        date: '2022-08-11T17:00:00.000Z',
+        date: dummyDateIsoString,
         author: 'tester',
         authorId: 'testerId',
         voteCountPerOption: { a: 0, b: 0 },
@@ -55,7 +58,7 @@ describe('PollMapper', () => {
         {
           options: ['a', 'b'],
           name: 'poll name',
-          date: new Date(2022, 7, 12),
+          date: dummyDate,
           author: 'tester',
           authorId: 'testerId',
         },
@@ -73,7 +76,7 @@ describe('PollMapper', () => {
         {
           options: ['a', 'b'],
           name: 'poll name',
-          date: new Date(2022, 7, 12),
+          date: dummyDate,
           voteCountPerOption: {
             a: 33,
             b: 111,
@@ -91,12 +94,12 @@ describe('PollMapper', () => {
         GSI1PK: 'u#testerId',
         GSI1SK: `p#poll1`,
         GSI2PK: 'poll',
-        GSI2SK: `2022-08-11T17:00:00.000Z`,
+        GSI2SK: dummyDateIsoString,
         id: 'poll1',
         voteCount: 144,
         options: ['a', 'b'],
         name: 'poll name',
-        date: '2022-08-11T17:00:00.000Z',
+        date: dummyDateIsoString,
         author: 'tester',
         authorId: 'testerId',
         voteCountPerOption: { a: 33, b: 111 },
