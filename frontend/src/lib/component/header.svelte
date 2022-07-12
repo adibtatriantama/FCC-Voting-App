@@ -1,14 +1,17 @@
 <script lang="ts">
 	import { userStore } from '$lib/store/authStore';
 	import { logout } from '$lib/store/authStore';
+	import { page } from '$app/stores';
+
+	const baseUrl = $page.url.origin;
 
 	const loginUrl = `${import.meta.env.VITE_AUTH_DOMAIN}/login?client_id=${
 		import.meta.env.VITE_AUTH_CLIENT_ID
-	}&redirect_uri=${import.meta.env.VITE_BASE_URL}/authorize&response_type=token`;
+	}&redirect_uri=${baseUrl}/authorize&response_type=token`;
 
 	const signUpUrl = `${import.meta.env.VITE_AUTH_DOMAIN}/signup?client_id=${
 		import.meta.env.VITE_AUTH_CLIENT_ID
-	}&redirect_uri=${import.meta.env.VITE_BASE_URL}/authorize&response_type=token`;
+	}&redirect_uri=${baseUrl}/authorize&response_type=token`;
 </script>
 
 <div class="relative bg-white">
