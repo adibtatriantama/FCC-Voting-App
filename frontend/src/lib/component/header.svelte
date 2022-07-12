@@ -5,11 +5,11 @@
 
 	const baseUrl = $page.url.origin;
 
-	const loginUrl = `${import.meta.env.VITE_AUTH_DOMAIN}/login?client_id=${
+	const loginUrl = `${import.meta.env.VITE_AUTH_URL}/login?client_id=${
 		import.meta.env.VITE_AUTH_CLIENT_ID
 	}&redirect_uri=${baseUrl}/authorize&response_type=token`;
 
-	const signUpUrl = `${import.meta.env.VITE_AUTH_DOMAIN}/signup?client_id=${
+	const signUpUrl = `${import.meta.env.VITE_AUTH_URL}/signup?client_id=${
 		import.meta.env.VITE_AUTH_CLIENT_ID
 	}&redirect_uri=${baseUrl}/authorize&response_type=token`;
 </script>
