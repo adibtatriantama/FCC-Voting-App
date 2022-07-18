@@ -10,6 +10,8 @@ custom:
     Ref: CognitoUserPoolVotingAppUserPool
   UserPoolClientId:
     Ref: CognitoUserPoolClient
+  UserDir: src/useCase/user
+  PollDir: src/usecase/poll
 
 plugins:
   - serverless-esbuild
@@ -63,7 +65,7 @@ provider:
 
 functions:
   findOwnUser:
-    handler: src/useCase/findUserById/handler.main
+    handler: ${self:custom.UserDir}/findUserById/handler.main
     events:
       - httpApi:
           path: /me
@@ -71,14 +73,14 @@ functions:
           authorizer:
             name: JwtAuthorizer
   createUser:
-    handler: src/useCase/createUser/handler.main
+    handler: ${self:custom.UserDir}/createUser/handler.main
     events:
       - cognitoUserPool:
           pool: VotingAppUserPool
           trigger: PostConfirmation
 
   createPoll:
-    handler: src/useCase/createPoll/handler.main
+    handler: ${self:custom.PollDir}/createPoll/handler.main
     events:
       - httpApi:
           path: /poll
@@ -86,19 +88,19 @@ functions:
           authorizer:
             name: JwtAuthorizer
   findOnePollById:
-    handler: src/useCase/findOnePollById/handler.main
+    handler: ${self:custom.PollDir}/findOnePollById/handler.main
     events:
       - httpApi:
           path: /poll/{pollId}
           method: get
   findPoll:
-    handler: src/useCase/findPoll/handler.main
+    handler: ${self:custom.PollDir}/findPoll/handler.main
     events:
       - httpApi:
           path: /poll
           method: get
   findMyPoll:
-    handler: src/useCase/findMyPoll/handler.main
+    handler: ${self:custom.PollDir}/findMyPoll/handler.main
     events:
       - httpApi:
           path: /me/poll
@@ -106,7 +108,7 @@ functions:
           authorizer:
             name: JwtAuthorizer
   addVote:
-    handler: src/useCase/addVote/handler.main
+    handler: ${self:custom.PollDir}/addVote/handler.main
     events:
       - httpApi:
           path: /poll/{pollId}/vote
