@@ -17,4 +17,5 @@ export interface PollRepo {
   findOneById(id: string, options?: FindByIdOptions): Promise<Result<Poll>>;
 
   save(poll: Poll): Promise<Result<void>>;
+  remove(poll: Poll): Promise<Result<void>>;
 }

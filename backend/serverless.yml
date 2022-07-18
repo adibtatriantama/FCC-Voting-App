@@ -116,6 +116,12 @@ functions:
     environment:
       COGNITO_POOL_ID: '${self:custom.UserPoolId}'
       COGNITO_POOL_CLIENT_ID: '${self:custom.UserPoolClientId}'
+  removePoll:
+    handler: ${self:custom.PollDir}/removePoll/handler.main
+    events:
+      - httpApi:
+          path: /poll/{pollId}
+          method: delete
 
 resources:
   - ${file(resources/dynamodb-table.yml)}

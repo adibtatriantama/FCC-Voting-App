@@ -198,4 +198,21 @@ export class DynamoDbPollRepo implements PollRepo {
       Item: PollMapper.toDynamoDbModel(poll),
     });
   }
+
+  async remove(poll: Poll): Promise<Result<void>> {
+    try {
+      await ddbDoc.delete({
+        TableName: process.env.TABLE_NAME,
+        Key: {
+          PK: generatePollPk(poll.id),
+          SK: generatePollSk(),
+        },
+      });
+
+      return Result.ok();
+    } catch (error) {
+      console.error(error);
+      return Result.fail('Unexpected Error');
+    }
+  }
 }
