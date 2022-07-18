@@ -3,6 +3,7 @@ import { Result } from 'src/core/result';
 import { EntityNotFoundError, UnexpectedError } from 'src/core/useCaseError';
 import { Poll, PollProps } from 'src/model/poll';
 import { PollRepo } from 'src/repo/pollRepo';
+import { buildMockPollRepo } from 'src/test/helper';
 import { AddVote, AddVoteRequest, UnableToCreateOptionError } from './addVote';
 
 const buildRequest = (request?: Partial<AddVoteRequest>): AddVoteRequest => {
@@ -26,15 +27,6 @@ const buildDummyPoll = (pollProps?: Partial<PollProps>, id?: string) => {
     },
     id ?? 'pollId',
   ).getValue();
-};
-
-const buildMockPollRepo = (params?: Partial<PollRepo>) => {
-  return {
-    find: params?.find ?? jest.fn(),
-    findByUserId: params?.findByUserId ?? jest.fn(),
-    findOneById: params?.findOneById ?? jest.fn(),
-    save: params?.save ?? jest.fn(),
-  };
 };
 
 let useCase: AddVote;

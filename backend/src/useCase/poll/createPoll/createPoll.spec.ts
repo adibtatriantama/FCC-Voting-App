@@ -3,6 +3,7 @@ import { UnexpectedError } from 'src/core/useCaseError';
 import { User } from 'src/model/user';
 import { PollRepo } from 'src/repo/pollRepo';
 import { UserRepo } from 'src/repo/userRepo';
+import { buildMockPollRepo, buildMockUserRepo } from 'src/test/helper';
 import { CreatePoll, CreatePollRequest, PollCreationError } from './createPoll';
 
 let useCase: CreatePoll;
@@ -22,22 +23,6 @@ const buildCreatePollRequest = (
     name: request?.name ?? 'poll',
     options: request?.options ?? ['a', 'b'],
     date: request?.date ?? new Date(),
-  };
-};
-
-const buildMockUserRepo = (params?: Partial<UserRepo>) => {
-  return {
-    findOneById: params?.findOneById ?? jest.fn(),
-    save: params?.save ?? jest.fn(),
-  };
-};
-
-const buildMockPollRepo = (params?: Partial<PollRepo>) => {
-  return {
-    find: params?.find ?? jest.fn(),
-    findByUserId: params?.findByUserId ?? jest.fn(),
-    findOneById: params?.findOneById ?? jest.fn(),
-    save: params?.save ?? jest.fn(),
   };
 };
 

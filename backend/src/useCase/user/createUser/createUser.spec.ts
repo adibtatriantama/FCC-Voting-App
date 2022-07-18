@@ -3,6 +3,7 @@ import { Result } from 'src/core/result';
 import { UnexpectedError } from 'src/core/useCaseError';
 import { User } from 'src/model/user';
 import { UserRepo } from 'src/repo/userRepo';
+import { buildMockUserRepo } from 'src/test/helper';
 import { CreateUser, UserAlreadyExist } from './createUser';
 
 let useCase: CreateUser;
@@ -24,10 +25,11 @@ afterEach(() => {
 
 describe('CreateUser', () => {
   beforeEach(() => {
-    mockUserRepo = {
+    mockUserRepo = buildMockUserRepo({
       findOneById: jest.fn().mockResolvedValue(Result.fail(NOT_FOUND)),
       save: jest.fn().mockResolvedValue(Result.ok()),
-    };
+    });
+
     useCase = new CreateUser(mockUserRepo);
   });
 
@@ -50,10 +52,11 @@ describe('CreateUser', () => {
 
   describe('when user with same id already exist', () => {
     beforeEach(() => {
-      mockUserRepo = {
+      mockUserRepo = buildMockUserRepo({
         findOneById: jest.fn().mockResolvedValue(Result.ok(dummyUser)),
         save: jest.fn(),
-      };
+      });
+
       useCase = new CreateUser(mockUserRepo);
     });
 
@@ -73,10 +76,11 @@ describe('CreateUser', () => {
 
   describe('when unable to save', () => {
     beforeEach(() => {
-      mockUserRepo = {
+      mockUserRepo = buildMockUserRepo({
         findOneById: jest.fn().mockResolvedValue(Result.fail(NOT_FOUND)),
         save: jest.fn().mockResolvedValue(Result.fail(NOT_FOUND)),
-      };
+      });
+
       useCase = new CreateUser(mockUserRepo);
     });
 

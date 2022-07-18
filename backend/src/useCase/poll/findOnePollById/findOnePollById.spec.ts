@@ -3,6 +3,7 @@ import { Result } from 'src/core/result';
 import { EntityNotFoundError, UnexpectedError } from 'src/core/useCaseError';
 import { Poll } from 'src/model/poll';
 import { PollRepo } from 'src/repo/pollRepo';
+import { buildMockPollRepo } from 'src/test/helper';
 import { FindOnePollById } from './findOnePollBy';
 
 const dummyEntity = Poll.create({
@@ -15,15 +16,6 @@ const dummyEntity = Poll.create({
 
 let useCase: FindOnePollById;
 let mockPollRepo: PollRepo;
-
-const buildMockPollRepo = (params?: Partial<PollRepo>) => {
-  return {
-    find: params?.find ?? jest.fn(),
-    findByUserId: params?.findByUserId ?? jest.fn(),
-    findOneById: params?.findOneById ?? jest.fn(),
-    save: params?.save ?? jest.fn(),
-  };
-};
 
 describe('FindOnePollById', () => {
   beforeEach(() => {
