@@ -11,7 +11,7 @@ custom:
   UserPoolClientId:
     Ref: CognitoUserPoolClient
   UserDir: src/useCase/user
-  PollDir: src/usecase/poll
+  PollDir: src/useCase/poll
 
 plugins:
   - serverless-esbuild
