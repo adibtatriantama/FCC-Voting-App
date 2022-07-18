@@ -122,6 +122,8 @@ functions:
       - httpApi:
           path: /poll/{pollId}
           method: delete
+          authorizer:
+            name: JwtAuthorizer
 
 resources:
   - ${file(resources/dynamodb-table.yml)}
