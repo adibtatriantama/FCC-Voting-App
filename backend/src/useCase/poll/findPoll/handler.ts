@@ -10,15 +10,7 @@ export const main: APIGatewayProxyHandler = async (
 ) => {
   process.env.BASE_URL = `https://${event.requestContext.domainName}`;
 
-  // DynamoDB specific pagination
-  const { lastEvaluatedKey } = event.queryStringParameters || {};
-  const queryOptions = {
-    lastEvaluatedKey: lastEvaluatedKey
-      ? JSON.parse(lastEvaluatedKey)
-      : undefined,
-  };
-
-  const response = await useCase.execute({ queryOptions });
+  const response = await useCase.execute();
 
   if (response.isRight()) {
     return {

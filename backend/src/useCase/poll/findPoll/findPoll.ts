@@ -2,24 +2,18 @@ import { Either, left, right } from 'src/core/either';
 import { UseCase } from 'src/core/useCase';
 import { UnexpectedError, UseCaseError } from 'src/core/useCaseError';
 import { PollMapper } from 'src/mapper/pollMapper';
-import { createPaginationLinks, PaginationLinks } from 'src/model/pagination';
 import { PollDto } from 'src/model/poll';
 import { PollRepo } from 'src/repo/pollRepo';
 
-const FIND_POLL_PATH = 'poll';
+export type FindPollRequest = void;
 
-export type FindPollRequest = { queryOptions: Record<string, any> };
-
-export type FindPollResponse = Either<
-  UseCaseError,
-  { items: PollDto[]; _links: PaginationLinks }
->;
+export type FindPollResponse = Either<UseCaseError, { items: PollDto[] }>;
 
 export class FindPoll implements UseCase<FindPollRequest, FindPollResponse> {
   constructor(private readonly pollRepo: PollRepo) {}
 
-  async execute(request: FindPollRequest): Promise<FindPollResponse> {
-    const findResult = await this.pollRepo.find(request.queryOptions);
+  async execute(): Promise<FindPollResponse> {
+    const findResult = await this.pollRepo.find();
 
     if (findResult.isFailure) {
       return left(new UnexpectedError());
@@ -27,11 +21,8 @@ export class FindPoll implements UseCase<FindPollRequest, FindPollResponse> {
 
     const findResultValue = findResult.getValue();
 
-    const { items: polls, paginationQueryParams } = findResultValue;
+    const polls = findResultValue;
 
-    return right({
-      items: polls.map(PollMapper.toDto),
-      _links: createPaginationLinks(FIND_POLL_PATH, paginationQueryParams),
-    });
+    return right({ items: polls.map(PollMapper.toDto) });
   }
 }

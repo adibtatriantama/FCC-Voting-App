@@ -12,15 +12,7 @@ export const main: APIGatewayProxyHandler = async (
 
   const { sub: userId } = event.requestContext.authorizer?.jwt.claims;
 
-  // DynamoDB specific pagination
-  const { lastEvaluatedKey } = event.queryStringParameters || {};
-  const queryOptions = {
-    lastEvaluatedKey: lastEvaluatedKey
-      ? JSON.parse(lastEvaluatedKey)
-      : undefined,
-  };
-
-  const response = await useCase.execute({ userId, queryOptions });
+  const response = await useCase.execute({ userId });
 
   if (response.isRight()) {
     return {

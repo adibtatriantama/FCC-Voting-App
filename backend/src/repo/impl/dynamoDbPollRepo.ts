@@ -1,17 +1,11 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import {
-  DynamoDBDocument,
-  GetCommandOutput,
-  QueryCommandOutput,
-} from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocument, GetCommandOutput } from '@aws-sdk/lib-dynamodb';
 import { NOT_FOUND, POLL } from 'src/constant';
 import { Result } from 'src/core/result';
 import { generatePollGsi1Pk, generatePollPk, generatePollSk } from 'src/helper';
 import { PollMapper } from 'src/mapper/pollMapper';
-import { Items } from 'src/model/items';
-import { PaginationQueryParams } from 'src/model/pagination';
 import { Poll } from 'src/model/poll';
-import { QueryOptions, PollRepo, FindByIdOptions } from '../pollRepo';
+import { PollRepo, FindByIdOptions } from '../pollRepo';
 
 const ddbclient = new DynamoDBClient({
   region: process.env.APP_REGION,
@@ -19,7 +13,6 @@ const ddbclient = new DynamoDBClient({
 const ddbDoc = DynamoDBDocument.from(ddbclient, {
   marshallOptions: { removeUndefinedValues: true },
 });
-const LIMIT = 10;
 
 export class DynamoDbPollRepo implements PollRepo {
   async findOneById(
@@ -53,81 +46,72 @@ export class DynamoDbPollRepo implements PollRepo {
     return Result.ok(poll);
   }
 
-  async find(option?: QueryOptions): Promise<Result<Items<Poll>>> {
-    let queryResult: QueryCommandOutput;
+  async find(): Promise<Result<Poll[]>> {
+    const polls: Poll[] = [];
+
+    let firstLoad = true;
+    let lastEvaluatedKey: Record<string, any> | undefined = undefined;
 
     try {
-      queryResult = await ddbDoc.query({
-        TableName: process.env.TABLE_NAME,
-        KeyConditionExpression: 'GSI2PK = :pk',
-        ExpressionAttributeValues: {
-          ':pk': POLL,
-        },
-        IndexName: 'GSI2',
-        ScanIndexForward: false,
-        Limit: LIMIT,
-        ExclusiveStartKey: option?.lastEvaluatedKey,
-      });
+      while (firstLoad || lastEvaluatedKey) {
+        const queryResult = await ddbDoc.query({
+          TableName: process.env.TABLE_NAME,
+          KeyConditionExpression: 'GSI2PK = :pk',
+          ExpressionAttributeValues: {
+            ':pk': POLL,
+          },
+          IndexName: 'GSI2',
+          ScanIndexForward: false,
+          ExclusiveStartKey: lastEvaluatedKey,
+        });
+
+        const items = queryResult.Items;
+
+        polls.push(...items.map(PollMapper.toEntity));
+
+        firstLoad = false;
+        lastEvaluatedKey = queryResult.LastEvaluatedKey;
+      }
     } catch (error) {
       console.error(error);
       return Result.fail('Unexpected Error');
     }
 
-    const items = queryResult.Items;
-
-    const paginationQueryParams: PaginationQueryParams = {
-      next: queryResult?.LastEvaluatedKey
-        ? `lastEvaluatedKey=${encodeURIComponent(
-            JSON.stringify(queryResult.LastEvaluatedKey),
-          )}`
-        : undefined,
-    };
-
-    const polls: Poll[] = items.map((item): Poll => {
-      return PollMapper.toEntity(item);
-    });
-
-    return Result.ok({ paginationQueryParams, items: polls });
+    return Result.ok(polls);
   }
 
-  async findByUserId(
-    userId: string,
-    option?: QueryOptions,
-  ): Promise<Result<Items<Poll>>> {
-    let queryResult: QueryCommandOutput;
+  async findByUserId(userId: string): Promise<Result<Poll[]>> {
+    const polls: Poll[] = [];
 
-    try {
-      queryResult = await ddbDoc.query({
-        TableName: process.env.TABLE_NAME,
-        KeyConditionExpression: 'GSI1PK = :pk',
-        ExpressionAttributeValues: {
-          ':pk': generatePollGsi1Pk(userId),
-        },
-        ScanIndexForward: false,
-        IndexName: 'GSI1',
-        Limit: LIMIT,
-        ExclusiveStartKey: option?.lastEvaluatedKey,
-      });
-    } catch (error) {
-      console.error(error);
-      return Result.fail('Unexpected Error');
+    let firstLoad = true;
+    let lastEvaluatedKey: Record<string, any> | undefined = undefined;
+
+    while (firstLoad || lastEvaluatedKey) {
+      try {
+        const queryResult = await ddbDoc.query({
+          TableName: process.env.TABLE_NAME,
+          KeyConditionExpression: 'GSI1PK = :pk',
+          ExpressionAttributeValues: {
+            ':pk': generatePollGsi1Pk(userId),
+          },
+          ScanIndexForward: false,
+          IndexName: 'GSI1',
+          ExclusiveStartKey: lastEvaluatedKey,
+        });
+
+        const items = queryResult.Items;
+
+        polls.push(...items.map(PollMapper.toEntity));
+
+        firstLoad = false;
+        lastEvaluatedKey = queryResult.LastEvaluatedKey;
+      } catch (error) {
+        console.error(error);
+        return Result.fail('Unexpected Error');
+      }
     }
 
-    const items = queryResult.Items;
-
-    const paginationQueryParams: PaginationQueryParams = {
-      next: queryResult?.LastEvaluatedKey
-        ? `lastEvaluatedKey=${encodeURIComponent(
-            JSON.stringify(queryResult.LastEvaluatedKey),
-          )}`
-        : undefined,
-    };
-
-    const polls: Poll[] = items.map((item): Poll => {
-      return PollMapper.toEntity(item);
-    });
-
-    return Result.ok({ paginationQueryParams, items: polls });
+    return Result.ok(polls);
   }
 
   async save(poll: Poll): Promise<Result<void>> {

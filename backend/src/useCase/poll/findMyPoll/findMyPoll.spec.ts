@@ -3,7 +3,7 @@ import { UnexpectedError } from 'src/core/useCaseError';
 import { Poll } from 'src/model/poll';
 import { PollRepo } from 'src/repo/pollRepo';
 import { buildMockPollRepo } from 'src/test/helper';
-import { FindMyPoll } from './findMyPoll';
+import { FindMyPoll, FindMyPollRequest } from './findMyPoll';
 
 const dummyEntity = Poll.create({
   author: 'tester',
@@ -16,54 +16,24 @@ const dummyEntity = Poll.create({
 let useCase: FindMyPoll;
 let mockPollRepo: PollRepo;
 
-describe('FindMyPoll', () => {
-  beforeEach(() => {
-    mockPollRepo = buildMockPollRepo({
-      findByUserId: jest
-        .fn()
-        .mockResolvedValue(
-          Result.ok({ items: [dummyEntity], paginationQueryParams: {} }),
-        ),
-    });
+let request: FindMyPollRequest;
 
-    useCase = new FindMyPoll(mockPollRepo);
+beforeEach(() => {
+  mockPollRepo = buildMockPollRepo({
+    findByUserId: jest.fn().mockResolvedValue(Result.ok([dummyEntity])),
   });
 
-  it('should return dto', async () => {
-    const request = { userId: 'tester', queryOptions: {} };
+  useCase = new FindMyPoll(mockPollRepo);
 
+  request = { userId: 'tester' };
+});
+
+describe('FindMyPoll', () => {
+  it('should return dto', async () => {
     const response = await useCase.execute(request);
 
     expect(response.isRight()).toBe(true);
-    expect(response.value['items']).toBeDefined();
-  });
-
-  describe('when result has next page', () => {
-    beforeEach(() => {
-      mockPollRepo = buildMockPollRepo({
-        findByUserId: jest.fn().mockResolvedValue(
-          Result.ok({
-            items: [dummyEntity],
-            paginationQueryParams: {
-              next: `lastEvaluatedKey=${encodeURIComponent(
-                JSON.stringify({ key: 'item' }),
-              )}`,
-            },
-          }),
-        ),
-      });
-
-      useCase = new FindMyPoll(mockPollRepo);
-    });
-
-    it('should return the pagination link', async () => {
-      const request = { userId: 'tester', queryOptions: {} };
-
-      const response = await useCase.execute(request);
-
-      expect(response.isRight()).toBe(true);
-      expect(response.value['_links'].next).toBeDefined();
-    });
+    expect(response.value['items'].length > 0).toBeDefined();
   });
 
   describe('when unable to find poll', () => {
@@ -76,8 +46,6 @@ describe('FindMyPoll', () => {
     });
 
     it('should return UnexpectedError', async () => {
-      const request = { userId: 'tester', queryOptions: {} };
-
       const response = await useCase.execute(request);
 
       expect(response.isLeft()).toBe(true);

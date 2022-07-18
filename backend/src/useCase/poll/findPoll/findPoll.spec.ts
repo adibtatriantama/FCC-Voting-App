@@ -19,51 +19,17 @@ let mockPollRepo: PollRepo;
 describe('FindPoll', () => {
   beforeEach(() => {
     mockPollRepo = buildMockPollRepo({
-      find: jest
-        .fn()
-        .mockResolvedValue(
-          Result.ok({ items: [dummyEntity], paginationQueryParams: {} }),
-        ),
+      find: jest.fn().mockResolvedValue(Result.ok([dummyEntity])),
     });
 
     useCase = new FindPoll(mockPollRepo);
   });
 
   it('should return dto', async () => {
-    const request = { queryOptions: {} };
-
-    const response = await useCase.execute(request);
+    const response = await useCase.execute();
 
     expect(response.isRight()).toBe(true);
-    expect(response.value['items']).toBeDefined();
-  });
-
-  describe('when result has next page', () => {
-    beforeEach(() => {
-      mockPollRepo = buildMockPollRepo({
-        find: jest.fn().mockResolvedValue(
-          Result.ok({
-            items: [dummyEntity],
-            paginationQueryParams: {
-              next: `lastEvaluatedKey=${encodeURIComponent(
-                JSON.stringify({ key: 'item' }),
-              )}`,
-            },
-          }),
-        ),
-      });
-
-      useCase = new FindPoll(mockPollRepo);
-    });
-
-    it('should return the pagination link', async () => {
-      const request = { queryOptions: {} };
-
-      const response = await useCase.execute(request);
-
-      expect(response.isRight()).toBe(true);
-      expect(response.value['_links'].next).toBeDefined();
-    });
+    expect(response.value['items'].length > 0).toBeDefined();
   });
 
   describe('when unable to find poll', () => {
@@ -76,9 +42,7 @@ describe('FindPoll', () => {
     });
 
     it('should return UnexpectedError', async () => {
-      const request = { queryOptions: {} };
-
-      const response = await useCase.execute(request);
+      const response = await useCase.execute();
 
       expect(response.isLeft()).toBe(true);
       expect(response.value).toBeInstanceOf(UnexpectedError);
