@@ -6,7 +6,9 @@
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\"",
     "deploy:prod": "serverless deploy --stage=prod --verbose",
-    "test": "jest"
+    "deploy:test": "sls deploy --stage test --verbose",
+    "test": "jest",
+    "test:integration": "jest -c jest.integration.config.js --runInBand"
   },
   "author": "Adibta Triantama <adibtatriantama@gmail.com>",
   "license": "MIT",

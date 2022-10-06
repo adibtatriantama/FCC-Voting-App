@@ -16,6 +16,9 @@ custom:
 plugins:
   - serverless-esbuild
 
+package:
+  individually: true
+
 provider:
   name: aws
   runtime: nodejs16.x
@@ -127,3 +130,9 @@ functions:
 resources:
   - ${file(resources/dynamodb-table.yml)}
   - ${file(resources/cognito-user-pool.yml)}
+
+outputs:
+  tableName:
+    Ref: MainTable
+  appRegion: ${aws:region}
+  lambdaFunctionNamePrefix: voting-app-${sls:stage}-
