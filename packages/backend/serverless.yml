@@ -15,8 +15,6 @@ custom:
 
 plugins:
   - serverless-esbuild
-  - serverless-offline
-  - serverless-dynamodb-local
 
 provider:
   name: aws
