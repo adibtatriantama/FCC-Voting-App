@@ -6,5 +6,17 @@ module.exports = {
   moduleNameMapper: {
     'src/(.*)': '<rootDir>/src/$1',
   },
-  setupFiles: ['<rootDir>/.jest/setEnvVars.js'],
+  transform: {
+    '.(ts|tsx)': 'ts-jest',
+  },
+  globals: {
+    'ts-jest': {
+      compiler: 'ttypescript',
+    },
+  },
+  testRegex: '(\\.|/)(test|spec)\\.[jt]sx?$',
+  setupFiles: [
+    '<rootDir>/.jest/setupTsAutoMock.ts',
+    '<rootDir>/.jest/setEnvVars.ts',
+  ],
 };
