@@ -45,6 +45,7 @@ provider:
     cors:
       allowedOrigins:
         - https://adibta-fcc-voting-app.vercel.app
+        - http://localhost:3000
     authorizers:
       JwtAuthorizer:
         type: jwt
