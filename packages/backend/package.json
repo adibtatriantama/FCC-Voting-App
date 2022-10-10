@@ -6,7 +6,7 @@
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\"",
     "deploy:prod": "serverless deploy --stage=prod --verbose",
-    "deploy:test": "sls deploy --stage test --verbose",
+    "deploy:test": "sls deploy --stage test --verbose && bash scripts/saveStackVariables.sh",
     "test": "jest",
     "test:integration": "jest -c jest.integration.config.js --runInBand"
   },
