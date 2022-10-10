@@ -45,3 +45,5 @@ jobs:
           APP_REGION: ${{ steps.stack-variables.outputs.APP_REGION }}
           TABLE_NAME: ${{ steps.stack-variables.outputs.TABLE_NAME }}
           LAMBDA_FUNCTION_NAME_PREFIX: ${{ steps.stack-variables.outputs.LAMBDA_FUNCTION_NAME_PREFIX }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
