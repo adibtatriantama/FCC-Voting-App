@@ -22,6 +22,7 @@ jobs:
         uses: actions/setup-node@v3.3.0
         with:
           node-version: "16.x"
+          cache: 'npm'
       - run: npm i
       - name: Unit Test
         run: npm test
@@ -39,6 +40,7 @@ jobs:
         uses: actions/setup-node@v3.3.0
         with:
           node-version: "16.x"
+          cache: 'npm'
       - run: npm i
       - name: Deploy Test Stack
         id: deploy
@@ -55,6 +57,7 @@ jobs:
         uses: actions/setup-node@v3.3.0
         with:
           node-version: "16.x"
+          cache: 'npm'
       - run: npm i
       - name: Integration Test
         run: npm run test:integration
