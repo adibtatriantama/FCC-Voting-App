@@ -35,8 +35,8 @@ jobs:
       - name: Integration test
         run: npm run test:integration
         env:
-          APP_REGION: ${{ steps.deploy-test-stack-variables.outputs.APP_REGION }}
-          TABLE_NAME: ${{ steps.deploy-test-stack-variables.outputs.TABLE_NAME }}
+          APP_REGION: ${{ steps.deploy-test-stack.outputs.APP_REGION }}
+          TABLE_NAME: ${{ steps.deploy-test-stack.outputs.TABLE_NAME }}
           LAMBDA_FUNCTION_NAME_PREFIX: ${{ steps.stack-deploy-test-stack.outputs.LAMBDA_FUNCTION_NAME_PREFIX }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
