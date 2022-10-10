@@ -14,28 +14,53 @@ defaults:
     working-directory: packages/backend
 
 jobs:
-  unitAndIntegrationTest:
+  unit-test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.3.0
         with:
           node-version: "16.x"
-      - run: npm ci
-      - name: Unit test
+      - run: npm i
+      - name: Unit Test
         run: npm test
-      - name: Deploy test stack
-        id: deploy-test-stack
+
+  deploy-test-stack:
+    needs: [unit-test]
+    runs-on: ubuntu-latest
+    outputs:
+      APP_REGION: steps.deploy.outputs.APP_REGION
+      TABLE_NAME: steps.deploy.outputs.TABLE_NAME
+      LAMBDA_FUNCTION_NAME_PREFIX: steps.deploy.outputs.LAMBDA_FUNCTION_NAME_PREFIX
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.3.0
+        with:
+          node-version: "16.x"
+      - run: npm i
+      - name: Deploy Test Stack
+        id: deploy
         run: npm run deploy:test
         env:
           SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
-      - name: Integration test
+
+  integration-test:
+    needs: [deploy-test-stack]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.3.0
+        with:
+          node-version: "16.x"
+      - run: npm i
+      - name: Integration Test
         run: npm run test:integration
         env:
-          APP_REGION: ${{ steps.deploy-test-stack.outputs.APP_REGION }}
-          TABLE_NAME: ${{ steps.deploy-test-stack.outputs.TABLE_NAME }}
-          LAMBDA_FUNCTION_NAME_PREFIX: ${{ steps.stack-deploy-test-stack.outputs.LAMBDA_FUNCTION_NAME_PREFIX }}
+          APP_REGION: ${{ needs.deploy-test-stack.outputs.APP_REGION }}
+          TABLE_NAME: ${{ needs.deploy-test-stack.outputs.TABLE_NAME }}
+          LAMBDA_FUNCTION_NAME_PREFIX: ${{ needs.deploy-test-stack.outputs.LAMBDA_FUNCTION_NAME_PREFIX }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
