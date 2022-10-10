@@ -1,1 +1,3 @@
-process.env.BASE_URL='https://test-domain.com'
+import { config as loadEnv } from 'dotenv';
+
+loadEnv({ path: '.env.test' });
