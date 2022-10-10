@@ -39,9 +39,11 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "3.185.0",
+    "@aws-sdk/client-lambda": "3.186.0",
     "@aws-sdk/lib-dynamodb": "3.185.0",
     "aws-sdk": "2.1230.0",
     "axios": "0.27.2",
+    "dynamodb-onetable": "2.5.0",
     "jsonwebtoken": "8.5.1",
     "jwk-to-pem": "2.0.5",
     "ulid": "2.3.0"
