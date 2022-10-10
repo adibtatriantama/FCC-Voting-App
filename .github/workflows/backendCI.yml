@@ -26,24 +26,15 @@ jobs:
       - name: Unit test
         run: npm test
       - name: Deploy test stack
+        id: deploy-test-stack
         run: npm run deploy:test
         env:
           SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
-      - name: Save the stack variables 
-        id: stack-variables
-        run: |
-          APP_REGION=`sls output get --name appRegion --stage test`
-          TABLE_NAME=`sls output get --name tableName --stage test`
-          LAMBDA_FUNCTION_NAME_PREFIX=`sls output get --name lambdaFunctionNamePrefix --stage test`
-          echo ::set-output name=APP_REGION::$APP_REGION
-          echo ::set-output name=TABLE_NAME::$TABLE_NAME
-          echo ::set-output name=LAMBDA_FUNCTION_NAME_PREFIX::$LAMBDA_FUNCTION_NAME_PREFIX
-        shell: bash
       - name: Integration test
         run: npm run test:integration
         env:
-          APP_REGION: ${{ steps.stack-variables.outputs.APP_REGION }}
-          TABLE_NAME: ${{ steps.stack-variables.outputs.TABLE_NAME }}
-          LAMBDA_FUNCTION_NAME_PREFIX: ${{ steps.stack-variables.outputs.LAMBDA_FUNCTION_NAME_PREFIX }}
+          APP_REGION: ${{ steps.deploy-test-stack-variables.outputs.APP_REGION }}
+          TABLE_NAME: ${{ steps.deploy-test-stack-variables.outputs.TABLE_NAME }}
+          LAMBDA_FUNCTION_NAME_PREFIX: ${{ steps.stack-deploy-test-stack.outputs.LAMBDA_FUNCTION_NAME_PREFIX }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
