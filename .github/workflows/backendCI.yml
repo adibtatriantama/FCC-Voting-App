@@ -23,6 +23,7 @@ jobs:
         with:
           node-version: "16.x"
           cache: 'npm'
+          cache-dependency-path: packages/backend/package-lock.json
       - run: npm i
       - name: Unit Test
         run: npm test
@@ -41,6 +42,7 @@ jobs:
         with:
           node-version: "16.x"
           cache: 'npm'
+          cache-dependency-path: packages/backend/package-lock.json
       - run: npm i
       - name: Deploy Test Stack
         id: deploy
@@ -58,6 +60,7 @@ jobs:
         with:
           node-version: "16.x"
           cache: 'npm'
+          cache-dependency-path: packages/backend/package-lock.json
       - run: npm i
       - name: Integration Test
         run: npm run test:integration
