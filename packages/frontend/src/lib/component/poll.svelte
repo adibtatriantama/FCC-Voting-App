@@ -8,9 +8,12 @@
 <script lang="ts">
 	import type { PollDto } from '$lib/model/pollDto';
 	import { toasts } from 'svelte-toasts';
-	import Pie from 'svelte-chartjs/src/Pie.svelte';
+	import { Pie } from 'svelte-chartjs';
+	import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
 	import * as d3 from 'd3';
 	import { onMount } from 'svelte';
+
+	ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 
 	const chartJsOptions = {
 		responsive: true,
